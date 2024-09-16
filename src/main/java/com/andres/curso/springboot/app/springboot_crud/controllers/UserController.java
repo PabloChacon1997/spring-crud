@@ -39,11 +39,18 @@ public class UserController {
     return ResponseEntity.status(HttpStatus.CREATED).body(service.save(user));
   }
 
-    private ResponseEntity<?> validation(BindingResult result) {
-    Map<String, String> errors = new HashMap<>();
-    result.getFieldErrors().forEach(err -> {
-      errors.put(err.getField(), "El campo "+ err.getField() + " " + err.getDefaultMessage());
-    });
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+
+  @PostMapping("/register")
+  public ResponseEntity<?> register(@Valid @RequestBody User user, BindingResult result) {
+    user.setAdmin(false);
+    return create(user, result);
   }
+
+  private ResponseEntity<?> validation(BindingResult result) {
+  Map<String, String> errors = new HashMap<>();
+  result.getFieldErrors().forEach(err -> {
+    errors.put(err.getField(), "El campo "+ err.getField() + " " + err.getDefaultMessage());
+  });
+  return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+}
 }
